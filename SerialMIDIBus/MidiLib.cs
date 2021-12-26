@@ -69,7 +69,7 @@ namespace SerialMIDIBus
     }
     public class MidiLib:IDisposable
     {
-        public delegate void _CallbackEventHandler(int state, int dt1, int dt2);
+        public delegate void _CallbackEventHandler(byte state, byte dt1, byte dt2);
         public event _CallbackEventHandler MidiRecieveEvent;
         private IntPtr MidiDevice_handler=IntPtr.Zero;
         private W32MIDI.MidiInProcDelegate _callbackoniisan = null;
@@ -78,6 +78,13 @@ namespace SerialMIDIBus
             _callbackoniisan = new W32MIDI.MidiInProcDelegate(Callback_ev);
             W32MIDI.midiInOpen(
                 out MidiDevice_handler, deviceid, _callbackoniisan, IntPtr.Zero, 0x30000);
+        }
+        public void Start()
+        {
+            if(MidiDevice_handler != IntPtr.Zero)
+            {
+                W32MIDI.midiInStart(MidiDevice_handler);
+            }
         }
         public void Dispose()
         {
@@ -92,7 +99,7 @@ namespace SerialMIDIBus
             {
                 if (MidiRecieveEvent != null)
                 {
-                    MidiRecieveEvent((int)dwParam1 & 0xff, (int)dwParam1 >> 8 & 0xff, (int)dwParam1 >> 16 & 0xff);
+                    MidiRecieveEvent((byte)((int)dwParam1 & 0xff),(byte)( (int)dwParam1 >> 8 & 0xff),(byte)( (int)dwParam1 >> 16 & 0xff));
                 }
             }
         }
