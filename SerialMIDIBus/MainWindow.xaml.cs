@@ -219,7 +219,8 @@ namespace SerialMIDIBus
 
         private void Window_Closed(object sender, EventArgs e)
         {
-
+            if(midilibkun != null)
+            midilibkun.Dispose();
             if (serialPort.IsOpen)
             {
                 serialPort.DiscardInBuffer();

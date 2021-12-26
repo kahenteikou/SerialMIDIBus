@@ -97,14 +97,25 @@ namespace SerialMIDIBus
                 W32MIDI.midiInStart(MidiDevice_handler);
             }
         }
-        public void Dispose()
+        protected virtual void Dispose(bool disposing)
         {
+            if (disposing)
+            {
+            }
             logger.Info("Closing Midi Device..");
             if (MidiDevice_handler != IntPtr.Zero)
             {
                 W32MIDI.midiInClose(MidiDevice_handler);
             }
             IsOpen = false;
+        }
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        ~MidiLib()
+        {
+            Dispose(false);
         }
         private void Callback_ev(IntPtr midiIn,uint wMsg, IntPtr dwInstance, IntPtr dwParam1, IntPtr dwParam2)
         {
