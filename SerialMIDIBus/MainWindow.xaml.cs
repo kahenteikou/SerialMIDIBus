@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
@@ -17,11 +18,14 @@ using System.Windows.Shapes;
 
 namespace SerialMIDIBus
 {
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        static public Logger logger = LogManager.GetCurrentClassLogger();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -31,6 +35,7 @@ namespace SerialMIDIBus
         private SerialPort serialPort = new SerialPort();
         private void SerialPortRefresh()
         {
+            logger.Info("Refreshing SerialPort Device.");
             int indexNo = 0;
             comportlist.Clear();
             SerialPortCombo.Items.Clear();
@@ -42,6 +47,7 @@ namespace SerialMIDIBus
                 indexNo = ptrname.IndexOf("(COM");
                 if(indexNo >= 0)
                 {
+                    logger.Debug("Found Serial Device : " + ptrname);
                     SerialPortCombo.Items.Add(prt.GetPropertyValue("Caption"));
                     comportlist.Add(ptrname.Substring(indexNo + 1).Replace(")", ""));
                 }
@@ -50,19 +56,23 @@ namespace SerialMIDIBus
             {
                 SerialPortCombo.SelectedIndex = 0;
             }
+            logger.Info("Refreshed SerialPort Device.");
         }
         private void midiRefresh()
         {
+            logger.Info("Refreshing MIDI Device.");
             MidiComboBox.Items.Clear();
             IEnumerable<W32MIDI.MidiInCaps> midiInCapsEnumerator = W32MIDI.GetmidiList();
             foreach (W32MIDI.MidiInCaps midiCapskun in midiInCapsEnumerator)
             {
+                logger.Debug("Found Midi Device : " + midiCapskun.szPname);
                 MidiComboBox.Items.Add(midiCapskun.szPname);
             }
             if(MidiComboBox.Items.Count > 0)
             {
                 MidiComboBox.SelectedIndex = 0;
             }
+            logger.Info("Refreshed MIDI Device.");
         }
         private void BT_Refresh()
         {
@@ -94,11 +104,17 @@ namespace SerialMIDIBus
                     STOPBT.IsEnabled = false;
                 }
             }
+            {
+                SerialPortStatusLabel.Content = (serialPort.IsOpen) ? "Open" : "Closed";
+                if(midilibkun != null)
+                MIDIStatusLabel.Content = (midilibkun.IsOpen) ? "Open" : "Closed";
+            }
         }
         private void StartBT_Click(object sender, RoutedEventArgs e)
         {
             if (!serialPort.IsOpen)
             {
+                logger.Error("Closed COM Port....");
                 MessageBox.Show("Please Open COM Port!");
                 return;
             }
@@ -114,6 +130,8 @@ namespace SerialMIDIBus
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
+                    logger.Error(ex.Message);
+                    logger.Error(ex.StackTrace);
                     serialPort.DiscardInBuffer();
                     try
                     {
@@ -122,6 +140,8 @@ namespace SerialMIDIBus
                     catch (Exception ex2)
                     {
                         MessageBox.Show(ex2.Message);
+                        logger.Error(ex2.Message);
+                        logger.Error(ex2.StackTrace);
                     }
                     return;
                 }
@@ -149,6 +169,7 @@ namespace SerialMIDIBus
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            logger.Info("Window Loaded!");
             midiRefresh();
             SerialPortRefresh();
             BT_Refresh();
@@ -174,14 +195,22 @@ namespace SerialMIDIBus
                     midilibkun.Dispose();
                 }
             }
+
             if (serialPort.IsOpen)
             {
                 serialPort.DiscardInBuffer();
                 try
                 {
+
+                    logger.Info("Closing Serial Port");
                     serialPort.Close();
-                }catch(Exception ex)
+
+                    logger.Info("Closed Serial Port");
+                }
+                catch (Exception ex)
                 {
+                    logger.Error(ex.Message);
+                    logger.Error(ex.StackTrace);
                     MessageBox.Show(ex.Message);
                 }
             }
@@ -196,17 +225,25 @@ namespace SerialMIDIBus
                 serialPort.DiscardInBuffer();
                 try
                 {
+
+                    logger.Info("Closing Serial Port");
                     serialPort.Close();
+
+                    logger.Info("Closed Serial Port");
                 }
                 catch (Exception ex)
                 {
+                    logger.Error(ex.Message);
+                    logger.Error(ex.StackTrace);
                     MessageBox.Show(ex.Message);
                 }
             }
+            logger.Info("Application Closed...");
         }
 
         private void SerialOpenBT_Click(object sender, RoutedEventArgs e)
         {
+            logger.Info("Opening Serial Port...");
             if (serialPort.IsOpen)
             {
                 serialPort.DiscardInBuffer();
@@ -216,6 +253,8 @@ namespace SerialMIDIBus
                 }
                 catch (Exception ex)
                 {
+                    logger.Error(ex.Message);
+                    logger.Error(ex.StackTrace);
                     MessageBox.Show(ex.Message);
                     return;
                 }
@@ -230,9 +269,12 @@ namespace SerialMIDIBus
             try
             {
                 serialPort.Open();
+                logger.Info("Opened Serial Port");
 
             }catch (Exception ex)
             {
+                logger.Error(ex.Message);
+                logger.Error(ex.StackTrace);
                 MessageBox.Show(ex.Message);
             }
             BT_Refresh();

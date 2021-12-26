@@ -13,10 +13,6 @@
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="29*"/>
-            <ColumnDefinition Width="11*"/>
-        </Grid.ColumnDefinitions>
         <Button x:Name="StartBT" Content="Start" HorizontalAlignment="Left" Margin="432,167,0,0" VerticalAlignment="Top" Click="StartBT_Click" IsEnabled="False"/>
         <ComboBox x:Name="MidiComboBox" HorizontalAlignment="Left" Height="24" Margin="39,22,0,0" VerticalAlignment="Top" Width="331"/>
         <Button x:Name="MIDIRefreshBT" Content="Refresh" HorizontalAlignment="Left" Margin="376,23,0,0" VerticalAlignment="Top" Click="MIDIRefreshBT_Click" RenderTransformOrigin="-0.53,0.523"/>
@@ -25,6 +21,14 @@
         <Button x:Name="STOPBT" Content="Stop" HorizontalAlignment="Left" Margin="364,167,0,0" VerticalAlignment="Top" Click="STOPBT_Click" IsEnabled="False"/>
         <Button x:Name="SerialOpenBT" Content="Open" HorizontalAlignment="Left" Margin="113,166,0,0" VerticalAlignment="Top" Click="SerialOpenBT_Click"/>
         <Button x:Name="SerialCloseBT" Content="Close" HorizontalAlignment="Left" Margin="180,170,0,0" VerticalAlignment="Top" Click="SerialCloseBT_Click" IsEnabled="False"/>
-        
+        <StatusBar VerticalAlignment="Bottom">
+            <Label Content="Status" />
+            <Separator />
+            <Label Content="Serial Port: "></Label>
+            <Label x:Name="SerialPortStatusLabel" Content="Closed"></Label>
+            <Separator />
+            <Label Content="MIDI Input: "/>
+            <Label x:Name="MIDIStatusLabel" Content="Closed"/>
+        </StatusBar>
     </Grid>
 </Window>
