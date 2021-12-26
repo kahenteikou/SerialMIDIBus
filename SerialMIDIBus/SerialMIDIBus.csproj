@@ -12,6 +12,10 @@
     <ApplicationDefinition Remove="App.xaml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.Management" Version="6.0.0" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <Page Include="App.xaml">
