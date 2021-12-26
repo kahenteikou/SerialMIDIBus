@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -69,6 +70,8 @@ namespace SerialMIDIBus
     }
     public class MidiLib:IDisposable
     {
+
+        static public Logger logger = LogManager.GetCurrentClassLogger();
         public bool IsOpen { get; private set; }
         public MidiLib()
         {
@@ -80,6 +83,7 @@ namespace SerialMIDIBus
         private W32MIDI.MidiInProcDelegate _callbackoniisan = null;
         public void Open(uint deviceid)
         {
+            logger.Info("Opening Midi Device..");
             _callbackoniisan = new W32MIDI.MidiInProcDelegate(Callback_ev);
             W32MIDI.midiInOpen(
                 out MidiDevice_handler, deviceid, _callbackoniisan, IntPtr.Zero, 0x30000);
@@ -87,14 +91,16 @@ namespace SerialMIDIBus
         }
         public void Start()
         {
-            if(MidiDevice_handler != IntPtr.Zero)
+            logger.Info("Starting Midi Service..");
+            if (MidiDevice_handler != IntPtr.Zero)
             {
                 W32MIDI.midiInStart(MidiDevice_handler);
             }
         }
         public void Dispose()
         {
-            if(MidiDevice_handler != IntPtr.Zero)
+            logger.Info("Closing Midi Device..");
+            if (MidiDevice_handler != IntPtr.Zero)
             {
                 W32MIDI.midiInClose(MidiDevice_handler);
             }

@@ -121,8 +121,8 @@ namespace SerialMIDIBus
             midilibkun = new MidiLib();
             midilibkun.MidiRecieveEvent += (byte status, byte dt1, byte dt2) =>
             {
-                System.Diagnostics.Debug.Print($"0x{status:X} 0x{dt1:X} 0x{dt2:X}");
-                
+                //System.Diagnostics.Debug.Print($"0x{status:X} 0x{dt1:X} 0x{dt2:X}");
+                logger.Debug($"MIDI Event Recieved 0x{status:X} 0x{dt1:X} 0x{dt2:X}");
                 try
                 {
                     serialPort.Write(new byte[] { status, dt1, dt2 }, 0, 3);
