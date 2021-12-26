@@ -64,6 +64,37 @@ namespace SerialMIDIBus
                 MidiComboBox.SelectedIndex = 0;
             }
         }
+        private void BT_Refresh()
+        {
+            StartBT.IsEnabled = false;
+            if (serialPort.IsOpen)
+            {
+                if(midilibkun == null)
+                {
+                    StartBT.IsEnabled = true;
+                }else
+                if (!midilibkun.IsOpen)
+                {
+                    StartBT.IsEnabled = true;
+                }
+            }
+            SerialCloseBT.IsEnabled = false;
+            SerialOpenBT.IsEnabled = true;
+            if (serialPort.IsOpen)
+            {
+                SerialCloseBT.IsEnabled = true;
+                SerialOpenBT.IsEnabled = false;
+            }
+            STOPBT.IsEnabled = false;
+            if(midilibkun != null)
+            {
+                STOPBT.IsEnabled = true; 
+                if (!midilibkun.IsOpen)
+                {
+                    STOPBT.IsEnabled = false;
+                }
+            }
+        }
         private void StartBT_Click(object sender, RoutedEventArgs e)
         {
             if (!serialPort.IsOpen)
@@ -75,6 +106,7 @@ namespace SerialMIDIBus
             midilibkun.MidiRecieveEvent += (byte status, byte dt1, byte dt2) =>
             {
                 System.Diagnostics.Debug.Print($"0x{status:X} 0x{dt1:X} 0x{dt2:X}");
+                
                 try
                 {
                     serialPort.Write(new byte[] { status, dt1, dt2 }, 0, 3);
@@ -93,9 +125,11 @@ namespace SerialMIDIBus
                     }
                     return;
                 }
+
             };
             midilibkun.Open((uint)MidiComboBox.SelectedIndex);
             midilibkun.Start();
+            BT_Refresh();
         }
         private void SerialMIDIWrite(byte[] datakun)
         {
@@ -117,6 +151,7 @@ namespace SerialMIDIBus
         {
             midiRefresh();
             SerialPortRefresh();
+            BT_Refresh();
         }
 
         private void SerialPortRefresh_Click(object sender, RoutedEventArgs e)
@@ -127,10 +162,18 @@ namespace SerialMIDIBus
         private void STOPBT_Click(object sender, RoutedEventArgs e)
         {
             midilibkun.Dispose();
+            BT_Refresh();
         }
 
         private void SerialCloseBT_Click(object sender, RoutedEventArgs e)
         {
+            if(midilibkun != null)
+            {
+                if (midilibkun.IsOpen)
+                {
+                    midilibkun.Dispose();
+                }
+            }
             if (serialPort.IsOpen)
             {
                 serialPort.DiscardInBuffer();
@@ -142,6 +185,7 @@ namespace SerialMIDIBus
                     MessageBox.Show(ex.Message);
                 }
             }
+            BT_Refresh();
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -191,6 +235,8 @@ namespace SerialMIDIBus
             {
                 MessageBox.Show(ex.Message);
             }
+            BT_Refresh();
         }
+
     }
 }

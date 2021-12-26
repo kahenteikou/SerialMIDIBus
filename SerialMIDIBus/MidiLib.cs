@@ -69,6 +69,11 @@ namespace SerialMIDIBus
     }
     public class MidiLib:IDisposable
     {
+        public bool IsOpen { get; private set; }
+        public MidiLib()
+        {
+            this.IsOpen = false;
+        }
         public delegate void _CallbackEventHandler(byte state, byte dt1, byte dt2);
         public event _CallbackEventHandler MidiRecieveEvent;
         private IntPtr MidiDevice_handler=IntPtr.Zero;
@@ -78,6 +83,7 @@ namespace SerialMIDIBus
             _callbackoniisan = new W32MIDI.MidiInProcDelegate(Callback_ev);
             W32MIDI.midiInOpen(
                 out MidiDevice_handler, deviceid, _callbackoniisan, IntPtr.Zero, 0x30000);
+            IsOpen = true;
         }
         public void Start()
         {
@@ -92,6 +98,7 @@ namespace SerialMIDIBus
             {
                 W32MIDI.midiInClose(MidiDevice_handler);
             }
+            IsOpen = false;
         }
         private void Callback_ev(IntPtr midiIn,uint wMsg, IntPtr dwInstance, IntPtr dwParam1, IntPtr dwParam2)
         {
