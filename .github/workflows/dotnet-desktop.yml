@@ -62,6 +62,12 @@ jobs:
       Wap_Project_Path: SerialMIDIBus\SerialMIDIBus.csproj                  # Replace with the path to your Wap project, i.e. MyWpf.App.Package\MyWpfApp.Package.wapproj.
 
     steps:
+    - name: Set current datetime as env variable
+      env:
+        TZ: 'Asia/Tokyo' # タイムゾーン指定
+      run: echo "CURRENT_DATETIME=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+    - name: Show current datetime
+      run: echo ${{ env.CURRENT_DATETIME }}
     - name: Checkout
       uses: actions/checkout@v2
       with:
@@ -114,5 +120,5 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: Zip  Package
+        name: ${{env:Solution_Name}}-${{env.CURRENT_DATETIME}}-${{github.sha}}
         path: _${{matrix.configuration}}
