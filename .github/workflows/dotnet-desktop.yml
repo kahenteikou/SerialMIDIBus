@@ -115,4 +115,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: Zip  Package
-        path: ${{ env.Wap_Project_Directory }}\..\_Release
+        path: ${{ env.Wap_Project_Directory }}\..\_${{matrix.configuration}}
