@@ -17,19 +17,50 @@ namespace SerialMIDIBus
     public partial class App : Application
     {
         static public Logger logger=LogManager.GetCurrentClassLogger();
+        static bool debug_enabled = true;
+        static bool help_enabled = false;
         /// <summary>
         /// Application Entry Point.
         /// </summary>
         [System.STAThreadAttribute()]
         [System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "6.0.1.0")]
-        public static void Main()
+        public static void Main(string[] args)
         {
+            Getopt.ParseOptions(args, (string opt1, string opt2) =>
+            {
+                switch (opt1)
+                {
+                    case "--nodebug":
+                        debug_enabled = false;
+                        return false;
+                    case "--help":
+                        help_enabled = true;
+                        return false;
+                    default:
+                        return false;
+                } 
+            });
             LogInit();
+            if (help_enabled)
+            {
+                help_show();
+                return;
+            }
             logger.Debug("Application booting...");
             SerialMIDIBus.App app = new SerialMIDIBus.App();
             app.InitializeComponent();
             app.Run();
+        }
+        static void help_show()
+        {
+            logger.Info("Help Screen....");
+            logger.Info("You can use these options.");
+            logger.Warn("--nodebug");
+            logger.Warn("--help");
+            logger.Info("That's all.");
+            logger.Info("Application Shutdown...");
+
         }
         public static void LogInit()
         {
@@ -66,7 +97,14 @@ namespace SerialMIDIBus
                 ConsoleOutputColor.White
                 )
             );
-            config.AddRule(LogLevel.Debug, LogLevel.Fatal, logconsole);
+            if (debug_enabled)
+            {
+                config.AddRule(LogLevel.Debug, LogLevel.Fatal, logconsole);
+            }
+            else
+            {
+                config.AddRule(LogLevel.Info, LogLevel.Fatal, logconsole);
+            }
             NLog.LogManager.Configuration = config;
 
         }

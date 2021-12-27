@@ -150,17 +150,6 @@ namespace SerialMIDIBus
             midilibkun.Start();
             BT_Refresh();
         }
-        private void SerialMIDIWrite(byte[] datakun)
-        {
-            try
-            {
-                serialPort.Write(datakun, 0, datakun.GetLength(0));
-            }catch(Exception ex)
-            {
-                throw;
-            }
-        }
-
         private void MIDIRefreshBT_Click(object sender, RoutedEventArgs e)
         {
             midiRefresh();
