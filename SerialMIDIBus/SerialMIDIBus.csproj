@@ -25,5 +25,12 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <Target Name="MakeZipPackage" DependsOnTargets="Publish">
+    <MakeDir Directories="$(ProjectDir)..\_$(Configuration)" />
+    <ZipDirectory
+      SourceDirectory="$(OutDir)\publish"
+      DestinationFile="$(ProjectDir)..\_$(Configuration)\$(AssemblyName)-$(Configuration)-v.$(Version).zip"
+      Overwrite="true" />
+  </Target>
 
 </Project>
