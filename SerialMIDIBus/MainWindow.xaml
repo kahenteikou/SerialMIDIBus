@@ -13,15 +13,19 @@
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
-        <Button x:Name="StartBT" Content="Start" HorizontalAlignment="Left" Margin="432,167,0,0" VerticalAlignment="Top" Click="StartBT_Click" IsEnabled="False"/>
-        <ComboBox x:Name="MidiComboBox" HorizontalAlignment="Left" Height="24" Margin="39,22,0,0" VerticalAlignment="Top" Width="331"/>
-        <Button x:Name="MIDIRefreshBT" Content="Refresh" HorizontalAlignment="Left" Margin="376,23,0,0" VerticalAlignment="Top" Click="MIDIRefreshBT_Click" RenderTransformOrigin="-0.53,0.523"/>
-        <ComboBox x:Name="SerialPortCombo" HorizontalAlignment="Left" Margin="39,66,0,0" VerticalAlignment="Top" Width="332"/>
-        <Button x:Name="SerialPortRefreshBT" Content="Refresh" HorizontalAlignment="Left" Margin="378,66,0,0" VerticalAlignment="Top" Click="SerialPortRefresh_Click"/>
-        <Button x:Name="STOPBT" Content="Stop" HorizontalAlignment="Left" Margin="364,167,0,0" VerticalAlignment="Top" Click="STOPBT_Click" IsEnabled="False"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="117*"/>
+            <ColumnDefinition Width="283*"/>
+        </Grid.ColumnDefinitions>
+        <Button x:Name="StartBT" Content="Start" HorizontalAlignment="Left" Margin="198,167,0,0" VerticalAlignment="Top" Click="StartBT_Click" IsEnabled="False" Grid.Column="1"/>
+        <ComboBox x:Name="MidiComboBox" HorizontalAlignment="Left" Height="24" Margin="39,22,0,0" VerticalAlignment="Top" Width="331" Grid.ColumnSpan="2"/>
+        <Button x:Name="MIDIRefreshBT" Content="Refresh" HorizontalAlignment="Left" Margin="142,23,0,0" VerticalAlignment="Top" Click="MIDIRefreshBT_Click" RenderTransformOrigin="-0.53,0.523" Grid.Column="1"/>
+        <ComboBox x:Name="SerialPortCombo" HorizontalAlignment="Left" Margin="39,66,0,0" VerticalAlignment="Top" Width="332" Grid.ColumnSpan="2"/>
+        <Button x:Name="SerialPortRefreshBT" Content="Refresh" HorizontalAlignment="Left" Margin="144,66,0,0" VerticalAlignment="Top" Click="SerialPortRefresh_Click" Grid.Column="1"/>
+        <Button x:Name="STOPBT" Content="Stop" HorizontalAlignment="Left" Margin="130,167,0,0" VerticalAlignment="Top" Click="STOPBT_Click" IsEnabled="False" Grid.Column="1"/>
         <Button x:Name="SerialOpenBT" Content="Open" HorizontalAlignment="Left" Margin="113,166,0,0" VerticalAlignment="Top" Click="SerialOpenBT_Click"/>
         <Button x:Name="SerialCloseBT" Content="Close" HorizontalAlignment="Left" Margin="180,170,0,0" VerticalAlignment="Top" Click="SerialCloseBT_Click" IsEnabled="False"/>
-        <StatusBar VerticalAlignment="Bottom">
+        <StatusBar VerticalAlignment="Bottom" Grid.ColumnSpan="2">
             <Label Content="Status" />
             <Separator />
             <Label Content="Serial Port: "></Label>

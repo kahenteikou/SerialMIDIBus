@@ -62,8 +62,7 @@ namespace SerialMIDIBus
         {
             logger.Info("Refreshing MIDI Device.");
             MidiComboBox.Items.Clear();
-            IEnumerable<W32MIDI.MidiInCaps> midiInCapsEnumerator = W32MIDI.GetmidiList();
-            foreach (W32MIDI.MidiInCaps midiCapskun in midiInCapsEnumerator)
+            foreach (W32MIDI.MidiInCaps midiCapskun in W32MIDI.GetmidiList())
             {
                 logger.Debug("Found Midi Device : " + midiCapskun.szPname);
                 MidiComboBox.Items.Add(midiCapskun.szPname);
@@ -115,14 +114,14 @@ namespace SerialMIDIBus
             if (!serialPort.IsOpen)
             {
                 logger.Error("Closed COM Port....");
-                MessageBox.Show("Please Open COM Port!");
+                MessageBox.Show("Please open COM Port!");
                 return;
             }
             midilibkun = new MidiLib();
             midilibkun.MidiRecieveEvent += (byte status, byte dt1, byte dt2) =>
             {
                 //System.Diagnostics.Debug.Print($"0x{status:X} 0x{dt1:X} 0x{dt2:X}");
-                logger.Debug($"MIDI Event Recieved 0x{status:X} 0x{dt1:X} 0x{dt2:X}");
+                logger.Debug($"MIDI Event 0x{status:X} 0x{dt1:X} 0x{dt2:X}");
                 try
                 {
                     serialPort.Write(new byte[] { status, dt1, dt2 }, 0, 3);
@@ -132,9 +131,9 @@ namespace SerialMIDIBus
                     MessageBox.Show(ex.Message);
                     logger.Error(ex.Message);
                     logger.Error(ex.StackTrace);
-                    serialPort.DiscardInBuffer();
                     try
                     {
+                        serialPort.DiscardInBuffer();
                         serialPort.Close();
                     }
                     catch (Exception ex2)
